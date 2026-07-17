@@ -17,6 +17,9 @@
   漏判率约27%（22题中6题），验证了LLM-as-Judge判分的必要性
 - ✅ 真实评测结果：Baseline成功率68.2% → Agent成功率95.5%（LLM-as-Judge判分），
   相对提升约40%；分学科看，EOS学科提升最明显（2/7→6/7）
+- ✅ MCP Server/Client：用官方mcp SDK把calculator和knowledge_search包装成标准MCP协议工具
+  （mcp_server.py + mcp_client_demo.py），Client端通过标准协议做工具发现（list_tools）和
+  调用（call_tool），不依赖硬编码的工具列表
 
 发现的问题（如实记录，不回避）：
 
