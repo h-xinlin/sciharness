@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.env
+benchmark/results/long_term_memory.json
+benchmark/results/results.json
+venv/
