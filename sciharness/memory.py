@@ -53,8 +53,11 @@ class LongTermMemory:
                 self._store = json.load(f)
 
     def _save(self):
+        dirname = os.path.dirname(self.path)
+        if dirname:
+            os.makedirs(dirname, exist_ok=True)
         with open(self.path, "w", encoding="utf-8") as f:
-            json.dump(self._store, f, ensure_ascii=False, indent=2)
+            json.dump(self.data, f, ensure_ascii=False, indent=2)
 
     def remember(self, key: str, experience: str):
         self._store[key] = experience
