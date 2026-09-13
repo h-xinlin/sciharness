@@ -22,3 +22,4 @@ SHORT_TERM_WINDOW = 8
 
 # RAG 检索参数
 RAG_TOP_K = 3
+RAG_BACKEND = os.environ.get("RAG_BACKEND", "tfidf")  # "tfidf" or "embedding"

@@ -29,7 +29,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from sciharness.agent import Agent, run_baseline
 from sciharness.llm import DeepSeekClient, MockLLMClient, TokenMeter
 from sciharness.memory import LongTermMemory
-from sciharness.rag import SimpleRetriever
+from sciharness.rag import SimpleRetriever, EmbeddingRetriever
 from sciharness.tools import build_tool_registry
 from sciharness.judge import llm_judge_grade
 from sciharness import config
@@ -85,7 +85,11 @@ def main():
     if args.limit:
         questions = questions[: args.limit]
 
-    retriever = SimpleRetriever(os.path.join(base_dir, "knowledge_base"), top_k=config.RAG_TOP_K)
+    kb_dir = os.path.join(base_dir, "knowledge_base")
+    if config.RAG_BACKEND == "embedding":
+        retriever = EmbeddingRetriever(kb_dir, top_k=config.RAG_TOP_K)
+    else:
+        retriever = SimpleRetriever(kb_dir, top_k=config.RAG_TOP_K)
     tools = build_tool_registry(retriever)
     llm_client = build_llm_client(args.mock)
     long_term = LongTermMemory(path=os.path.join(base_dir, "results", "long_term_memory.json"))

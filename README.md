@@ -95,3 +95,11 @@ Agent相对Baseline的token消耗高出约27倍，这是多步推理的必然代
 2. RAG换成embedding检索，对比TF-IDF的召回质量差异
 3. 实现Subagent分工（比如一个专门做数值计算的子agent + 一个专门做文献检索的子agent）
 4. 补充pytest单元测试，接入CI
+
+## RAG检索升级记录（2026-09-13）
+
+新增基于embedding的检索器（`EmbeddingRetriever`，sentence-transformers本地模型），通过`RAG_BACKEND`环境变量在TF-IDF和embedding之间切换，接口完全兼容，Agent/Tool层代码无需改动。
+
+**关键发现**：排查中发现原有TF-IDF检索器在中文知识库上存在bug——sklearn `TfidfVectorizer`默认分词器按空格切词，对无空格的中文文本基本失效，在22题benchmark中21题返回零检索结果。换成embedding检索后此问题解决（0题零召回）。最终任务准确率因模型自身能力较强（天花板效应）未见明显变化，但后续消融实验证实，Agent相对baseline的提升主要来自calculator工具和反思机制，而非此前认为的RAG检索。
+
+**已知待办**：`LongTermMemory.remember()`目前存储的是动作类型而非真实解题经验摘要，与设计意图不符，待修复。

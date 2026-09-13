@@ -167,6 +167,9 @@ class Agent:
             final_answer = final_answer or "[达到最大步数仍未得出结论]"
 
         if self.long_term_memory and final_answer and not failure_mode:
+            # 已知问题（2026-09-13发现）：steps[-1].action 在成功场景下几乎恒为字符串"finish"，
+            # 这里存的其实是"最后一步的动作类型"，不是真正有信息量的解题经验摘要，
+            # 与设计意图（记录"这道题最后用什么方法解出来的"）不符，待修复为存 final_answer 或 trace 摘要。
             self.long_term_memory.remember(
                 question[:50], f"最终采用的方法: {steps[-1].action if steps else 'N/A'}"
             )
